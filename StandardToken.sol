@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.5;
 
 import "./BasicToken.sol";
 import "./ERC20.sol";
@@ -30,9 +30,9 @@ contract StandardToken is ERC20, BasicToken {
     public
     returns (bool)
   {
-    require(_value <= balances[_from]);
-    require(_value <= allowed[_from][msg.sender]);
-    require(_to != address(0));
+    require(_value <= balances[_from], "Not enough balance.");
+    require(_value <= allowed[_from][msg.sender], "Not allowed.");
+    require(_to != address(0), "Invalid address.");
 
     balances[_from] = balances[_from].sub(_value);
     balances[_to] = balances[_to].add(_value);

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.5;
 
 /**
  * @title MultiOwnable
@@ -20,7 +20,7 @@ contract MultiOwnable {
   * @dev check owner
   */
   modifier onlyOwner() {
-    require(owners[msg.sender] != 0, "permission error[onlyOwner]");
+    require(owners[msg.sender] != address(0), "permission error[onlyOwner]");
     _;
   }
 
@@ -32,9 +32,9 @@ contract MultiOwnable {
   /**
   * @dev add new owner
   */
-  function newOwner(address _owner) external onlyOwner returns (bool) {
-    require(_owner != 0, "permission error[onlyOwner]");
-    require(owners[_owner] == 0, "permission error[onlyOwner]");
+  function newOwner(address _owner) external onlyRoot returns (bool) {
+    require(_owner != address(0), "Invalid address.");
+    require(owners[_owner] == address(0), "permission error[onlyOwner]");
     owners[_owner] = msg.sender;
     return true;
   }
@@ -42,10 +42,8 @@ contract MultiOwnable {
   /**
     * @dev delete owner
     */
-  function deleteOwner(address _owner) external onlyOwner returns (bool) {
-    require(owners[_owner] == msg.sender || (owners[_owner] != 0 && msg.sender == root), "permission error");
-
-    owners[_owner] = 0;
+  function deleteOwner(address _owner) external onlyRoot returns (bool) {
+    owners[_owner] = address(0);
     return true;
   }
 }

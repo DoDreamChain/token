@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.5;
 
 import "./LockableToken.sol";
 
@@ -6,7 +6,7 @@ import "./LockableToken.sol";
  * @title DRMBaseToken
  * dev 트랜잭션 실행 시 메모를 남길 수 있다.
  */
-contract DoDreamChainBase is LockableToken {
+contract DoDreamChainBase is LockableToken   {
     event DRMTransfer(address indexed from, address indexed to, uint256 value, string note);
     event DRMTransferFrom(address indexed owner, address indexed spender, address indexed to, uint256 value, string note);
     event DRMApproval(address indexed owner, address indexed spender, uint256 value, string note);
@@ -19,15 +19,13 @@ contract DoDreamChainBase is LockableToken {
 
     event DRMTransferToEcosystem(address indexed owner, address indexed spender, address indexed to
     , uint256 value, uint256 processIdHash, uint256 userIdHash, string note);
-    event DRMTransferToBounty(address indexed owner, address indexed spender, address indexed to
-    , uint256 value, uint256 processIdHash, uint256 userIdHash, string note);
 
     // ERC20 함수들을 오버라이딩 작업 > drm~ 함수를 타게 한다.
     function transfer(address to, uint256 value) public returns (bool ret) {
-        return drmTransfer(to, value, "");
+        return drmTransfer(to, value, "transfer");
     }
 
-    function drmTransfer(address to, uint256 value, string note) public returns (bool ret) {
+    function drmTransfer(address to, uint256 value, string memory note) public returns (bool ret) {
         require(to != address(this), "The receive address is the Contact Address of DoDreamChain.");
 
         ret = super.transfer(to, value);
@@ -37,8 +35,8 @@ contract DoDreamChainBase is LockableToken {
     function transferFrom(address from, address to, uint256 value) public returns (bool) {
         return drmTransferFrom(from, to, value, "");
     }
-
-    function drmTransferFrom(address from, address to, uint256 value, string note) public returns (bool ret) {
+             
+     function drmTransferFrom(address from, address to, uint256 value, string memory note) public returns (bool ret) {
         require(to != address(this), "The receive address is the Contact Address of DoDreamChain.");
 
         ret = super.transferFrom(from, to, value);
@@ -49,7 +47,7 @@ contract DoDreamChainBase is LockableToken {
         return drmApprove(spender, value, "");
     }
 
-    function drmApprove(address spender, uint256 value, string note) public returns (bool ret) {
+    function drmApprove(address spender, uint256 value, string memory note) public returns (bool ret) {
         ret = super.approve(spender, value);
         emit DRMApproval(msg.sender, spender, value, note);
     }
@@ -58,7 +56,7 @@ contract DoDreamChainBase is LockableToken {
         return drmIncreaseApproval(spender, addedValue, "");
     }
 
-    function drmIncreaseApproval(address spender, uint256 addedValue, string note) public returns (bool ret) {
+    function drmIncreaseApproval(address spender, uint256 addedValue, string memory note) public returns (bool ret) {
         ret = super.increaseApproval(spender, addedValue);
         emit DRMApproval(msg.sender, spender, allowed[msg.sender][spender], note);
     }
@@ -67,7 +65,7 @@ contract DoDreamChainBase is LockableToken {
         return drmDecreaseApproval(spender, subtractedValue, "");
     }
 
-    function drmDecreaseApproval(address spender, uint256 subtractedValue, string note) public returns (bool ret) {
+    function drmDecreaseApproval(address spender, uint256 subtractedValue, string memory note) public returns (bool ret) {
         ret = super.decreaseApproval(spender, subtractedValue);
         emit DRMApproval(msg.sender, spender, allowed[msg.sender][spender], note);
     }
@@ -85,7 +83,7 @@ contract DoDreamChainBase is LockableToken {
         return true;
     }
 
-    function drmMintTo(address to, uint256 amount, string note) public onlyOwner returns (bool ret) {
+    function drmMintTo(address to, uint256 amount, string memory note) public  returns (bool ret) {
         ret = mintTo(to, amount);
         emit DRMMintTo(msg.sender, to, amount, note);
     }
@@ -103,13 +101,11 @@ contract DoDreamChainBase is LockableToken {
         return true;
     }
 
-    function drmBurnFrom(address from, uint256 value, string note) public onlyOwner returns (bool ret) {
+    function drmBurnFrom(address from, uint256 value, string memory note) public onlyOwner returns (bool ret) {
         ret = burnFrom(from, value);
         emit DRMBurnFrom(msg.sender, from, value, note);
-        return ret;
     }
-
-
+    
     /**
      * dev DRM 팀에게 전송하는 경우
      */
@@ -117,7 +113,7 @@ contract DoDreamChainBase is LockableToken {
         address from,
         address to,
         uint256 value,
-        string note
+        string memory note
     ) public onlyOwner returns (bool ret) {
         require(to != address(this), "The receive address is the Contact Address of DoDreamChain.");
 
@@ -125,7 +121,7 @@ contract DoDreamChainBase is LockableToken {
         emit DRMTransferToTeam(from, msg.sender, to, value, note);
         return ret;
     }
-
+    
     /**
      * dev 파트너(어드바이저)에게 전송하는 경우
      */
@@ -133,7 +129,7 @@ contract DoDreamChainBase is LockableToken {
         address from,
         address to,
         uint256 value,
-        string note
+        string memory note
     ) public onlyOwner returns (bool ret) {
         require(to != address(this), "The receive address is the Contact Address of DoDreamChain.");
 
@@ -146,15 +142,15 @@ contract DoDreamChainBase is LockableToken {
      * dev EOA가 트랜잭션을 일으켜서 처리 * 여러개 계좌를 기준으로 한다. (가스비 아끼기 위함)
      */
     function drmBatchTransferToEcosystem(
-        address from, address[] to,
-        uint256[] values,
+        address from, address[] memory to,
+        uint256[] memory values,
         uint256 processIdHash,
-        uint256[] userIdHash,
-        string note
+        uint256[] memory userIdHash,
+        string memory note
     ) public onlyOwner returns (bool ret) {
         uint256 length = to.length;
-        require(length == values.length, "The size of \'to\' and \'values\' array is different.");
-        require(length == userIdHash.length, "The size of \'to\' and \'userIdHash\' array is different.");
+        require(length == values.length, "The sizes of \'to\' and \'values\' arrays are different.");
+        require(length == userIdHash.length, "The sizes of \'to\' and \'userIdHash\' arrays are different.");
 
         ret = true;
         for (uint256 i = 0; i < length; i++) {
@@ -164,32 +160,9 @@ contract DoDreamChainBase is LockableToken {
             emit DRMTransferToEcosystem(from, msg.sender, to[i], values[i], processIdHash, userIdHash[i], note);
         }
     }
-
-    /**
-     * dev 바운티 참여자에게 DRM 지급
-     * dev EOA가 트랜잭션을 일으켜서 처리 * 여러개 계좌를 기준으로 한다. (가스비 아끼기 위함)
-     */
-    function drmBatchTransferToBounty(
-        address from,
-        address[] to,
-        uint256[] values,
-        uint256 processIdHash,
-        uint256[] userIdHash,
-        string note
-    ) public onlyOwner returns (bool ret) {
-        uint256 length = to.length;
-        require(to.length == values.length, "The size of \'to\' and \'values\' array is different.");
-
-        ret = true;
-        for (uint256 i = 0; i < length; i++) {
-            require(to[i] != address(this), "The receive address is the Contact Address of DoDreamChain.");
-
-            ret = ret && super.transferFrom(from, to[i], values[i]);
-            emit DRMTransferToBounty(from, msg.sender, to[i], values[i], processIdHash, userIdHash[i], note);
-        }
-    }
-
+    
     function destroy() public onlyRoot {
-        selfdestruct(root);
+        selfdestruct(msg.sender);
     }
+   
 }
