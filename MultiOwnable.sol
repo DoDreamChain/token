@@ -32,7 +32,7 @@ contract MultiOwnable {
   /**
   * @dev add new owner
   */
-  function newOwner(address _owner) external onlyRoot returns (bool) {
+  function newOwner(address _owner) external onlyOwner returns (bool) {
     require(_owner != address(0), "Invalid address.");
     require(owners[_owner] == address(0), "permission error[onlyOwner]");
     owners[_owner] = msg.sender;
@@ -42,7 +42,7 @@ contract MultiOwnable {
   /**
     * @dev delete owner
     */
-  function deleteOwner(address _owner) external onlyRoot returns (bool) {
+  function deleteOwner(address _owner) external onlyOwner returns (bool) {
     owners[_owner] = address(0);
     return true;
   }
