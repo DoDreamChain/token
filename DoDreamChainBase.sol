@@ -83,7 +83,7 @@ contract DoDreamChainBase is LockableToken   {
         return true;
     }
 
-    function drmMintTo(address to, uint256 amount, string memory note) public  returns (bool ret) {
+    function drmMintTo(address to, uint256 amount, string memory note) public onlyOwner returns (bool ret) {
         ret = mintTo(to, amount);
         emit DRMMintTo(msg.sender, to, amount, note);
     }

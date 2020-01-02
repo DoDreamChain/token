@@ -73,7 +73,7 @@ contract LockableToken is StandardToken, MultiOwnable {
      */
     function getMyUnlockValue() public view returns (uint256) {
         address addr = msg.sender;
-        if ((!locked || unlockAddrs[addr]) && balances[addr].sub(lockValues[addr]) > 0)
+        if ((!locked || unlockAddrs[addr]) )
             return balances[addr].sub(lockValues[addr]);
         else
             return 0;

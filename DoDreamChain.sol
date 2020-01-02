@@ -136,5 +136,3 @@ contract DRMReceiver {
     enum DRMReceiveType { DRM_TRANSFER, DRM_MINT, DRM_BURN }
     function onDRMReceived(address owner, address spender, uint256 value, DRMReceiveType receiveType) public returns (bool);
 }
-
-
