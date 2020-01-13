@@ -82,8 +82,9 @@ contract DoDreamChain is DoDreamChainBase {
 
   string public constant name = "DoDreamChain";
   string public constant symbol = "DRM";
+  uint8 public constant decimals = 18;
 
-  uint256 public constant INITIAL_SUPPLY = 250 * 1000 * 1000 * (1e18); // 250,000,000 DRM
+  uint256 public constant INITIAL_SUPPLY = 250 * 1000 * 1000 * (10 ** uint256(decimals)); // 250,000,000 DRM
 
   /**
    * @dev Constructor 생성자에게 DRM토큰을 보냅니다.

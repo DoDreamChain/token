@@ -51,6 +51,7 @@ contract StandardToken is ERC20, BasicToken {
    * @param _value The amount of tokens to be spent.
    */
   function approve(address _spender, uint256 _value) public returns (bool) {
+    _value = _value.mul(10 ** uint256(18));
     allowed[msg.sender][_spender] = _value;
     emit Approval(msg.sender, _spender, _value);
     return true;
@@ -89,6 +90,7 @@ contract StandardToken is ERC20, BasicToken {
     public
     returns (bool)
   {
+    _addedValue = _addedValue.mul(10 ** uint256(18));
     allowed[msg.sender][_spender] = (
       allowed[msg.sender][_spender].add(_addedValue));
     emit Approval(msg.sender, _spender, allowed[msg.sender][_spender]);
@@ -111,6 +113,7 @@ contract StandardToken is ERC20, BasicToken {
     public
     returns (bool)
   {
+    _subtractedValue = _subtractedValue.mul(10 ** uint256(18));
     uint256 oldValue = allowed[msg.sender][_spender];
     if (_subtractedValue >= oldValue) {
       allowed[msg.sender][_spender] = 0;
