@@ -75,7 +75,7 @@ contract DoDreamChainBase is LockableToken   {
      */
     function mintTo(address to, uint256 amount) internal returns (bool) {
         require(to != address(0x0), "This address to be set is zero address(0). Check the input address.");
-        amount = amount.mul(10 ** uint256(18));
+    
         totalSupply_ = totalSupply_.add(amount);
         balances[to] = balances[to].add(amount);
 
@@ -93,7 +93,6 @@ contract DoDreamChainBase is LockableToken   {
      */
     function burnFrom(address from, uint256 value) internal returns (bool) {
         require(value <= balances[from], "Your balance is insufficient.");
-        value = value.mul(10 ** uint256(18));
 
         balances[from] = balances[from].sub(value);
         totalSupply_ = totalSupply_.sub(value);

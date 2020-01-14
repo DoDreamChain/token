@@ -58,7 +58,6 @@ contract LockableToken is StandardToken, MultiOwnable {
     }
 
     function setLockValue(address addr, uint256 value, string memory note) public onlyOwner {
-        value = value.mul(10 ** uint256(18));
         lockValues[addr] = value;
         if(value == 0){
             unlockAddrs[addr] = true;    
@@ -81,12 +80,10 @@ contract LockableToken is StandardToken, MultiOwnable {
     }
 
     function transfer(address to, uint256 value) public checkUnlock(msg.sender, value) returns (bool) {
-        value = value.mul(10 ** uint256(18));
         return super.transfer(to, value);
     }
 
     function transferFrom(address from, address to, uint256 value) public checkUnlock(from, value) returns (bool) {
-        value = value.mul(10 ** uint256(18));
         return super.transferFrom(from, to, value);
     }
 }
