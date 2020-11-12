@@ -74,6 +74,7 @@ contract DoDreamChainBase is LockableToken   {
      * dev 신규 발행시 반드시 주석을 남길수 있도록한다.
      */
     function mintTo(address to, uint256 amount) internal returns (bool) {
+        require(totalSupply_.add(amount) <= totalMaximumSupply_ , "Excess issue.");
         require(to != address(0x0), "This address to be set is zero address(0). Check the input address.");
     
         totalSupply_ = totalSupply_.add(amount);

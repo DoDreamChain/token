@@ -16,11 +16,19 @@ contract BasicToken is ERC20Basic {
 
   uint256 internal totalSupply_;
 
+  uint256 internal totalMaximumSupply_;
   /**
   * @dev Total number of tokens in existence
   */
   function totalSupply() public view returns (uint256) {
     return totalSupply_;
+  }
+
+  /**
+  * @dev TotalMaximumSupply number of tokens in existence
+  */
+  function totalMaximumSupply() public view returns (uint256) {
+    return totalMaximumSupply_;
   }
 
   /**
