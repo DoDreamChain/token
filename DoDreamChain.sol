@@ -124,11 +124,7 @@ contract DoDreamChain is DoDreamChainBase {
         postTransfer(address(0), msg.sender, to, amount, DRMReceiver.DRMReceiveType.DRM_MINT);
     }
 
-    function drmBurnFrom(address from, uint256 value, string memory note) public onlyOwner returns (bool ret) {
-        ret = super.drmBurnFrom(from, value, note);
-        postTransfer(address(0), msg.sender, from, value, DRMReceiver.DRMReceiveType.DRM_BURN);
-    }
-
+    
 }
 
 /**

@@ -54,5 +54,13 @@ contract BasicToken is ERC20Basic {
   function balanceOf(address _owner) public view returns (uint256) {
     return balances[_owner];
   }
+  
+  function burnValueOf() public view returns (uint256) {
+    return balances[0x000000000000000000000000000000000000dEaD];
+  }
+  
+  function presentTotalSupply() public view returns (uint256) {
+    return totalSupply_.sub(balances[0x000000000000000000000000000000000000dEaD]);
+  }
 
 }

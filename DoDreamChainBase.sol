@@ -12,7 +12,7 @@ contract DoDreamChainBase is LockableToken   {
     event DRMApproval(address indexed owner, address indexed spender, uint256 value, string note);
 
     event DRMMintTo(address indexed controller, address indexed to, uint256 amount, string note);
-    event DRMBurnFrom(address indexed controller, address indexed from, uint256 value, string note);
+    
 
     event DRMTransferToTeam(address indexed owner, address indexed spender, address indexed to, uint256 value, string note);
     event DRMTransferToPartner(address indexed owner, address indexed spender, address indexed to, uint256 value, string note);
@@ -74,7 +74,7 @@ contract DoDreamChainBase is LockableToken   {
      * dev 신규 발행시 반드시 주석을 남길수 있도록한다.
      */
     function mintTo(address to, uint256 amount) internal returns (bool) {
-        require(totalSupply_.add(amount) <= totalMaximumSupply_ , "Excess issue.");
+        require(totalSupply_.add(amount).sub(balances[0x000000000000000000000000000000000000dEaD]) <= totalMaximumSupply_ , "Excess issue.");
         require(to != address(0x0), "This address to be set is zero address(0). Check the input address.");
     
         totalSupply_ = totalSupply_.add(amount);
@@ -89,25 +89,8 @@ contract DoDreamChainBase is LockableToken   {
         emit DRMMintTo(msg.sender, to, amount, note);
     }
 
-    /**
-     * dev 화폐 소각시 반드시 주석을 남길수 있도록한다.
-     */
-    function burnFrom(address from, uint256 value) internal returns (bool) {
-        require(value <= balances[from], "Your balance is insufficient.");
-
-        balances[from] = balances[from].sub(value);
-        totalSupply_ = totalSupply_.sub(value);
-
-        emit Transfer(from, address(0), value);
-        return true;
-    }
-
-    function drmBurnFrom(address from, uint256 value, string memory note) public onlyOwner returns (bool ret) {
-        ret = burnFrom(from, value);
-        emit DRMBurnFrom(msg.sender, from, value, note);
-    }
-    
-    /**
+   
+      /**
      * dev DRM 팀에게 전송하는 경우
      */
     function drmTransferToTeam(
